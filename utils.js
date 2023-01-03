@@ -1,0 +1,204 @@
+var stringSimilarity = require("string-similarity")
+
+
+export function fetchFromOnexbet(onexbet, teams, matchInfo) {
+  for (let i = 0; i < onexbet.length; i++) {
+    const simteam1 = Math.round(
+      stringSimilarity.compareTwoStrings(onexbet[i]?.team1, teams?.team1) * 100
+    );
+    const simteam2 = Math.round(
+      stringSimilarity.compareTwoStrings(onexbet[i]?.team2, teams?.team2) * 100
+    );
+    if (simteam1 > 60 && simteam2 > 60) {
+      matchInfo.push({ bookie: "1xbet", info: onexbet[i] });
+      break;
+    }
+  }
+};
+
+export function fetchFromBetnaija(betnaija, teams, matchInfo) {
+  for (let i = 0; i < betnaija.length; i++) {
+    const simteam1 = Math.round(
+      stringSimilarity.compareTwoStrings(betnaija[i]?.team1, teams?.team1) * 100
+    );
+    const simteam2 = Math.round(
+      stringSimilarity.compareTwoStrings(betnaija[i]?.team2, teams?.team2) * 100
+    );
+    if (simteam1 > 60 && simteam2 > 60) {
+      matchInfo.push({ bookie: "Betnaija", info: betnaija[i] });
+      break;
+    }
+  }
+};
+
+export function fetchFromBetway(betway, teams, matchInfo) {
+  for (let i = 0; i < betway.length; i++) {
+    const simteam1 = Math.round(
+      stringSimilarity.compareTwoStrings(betway[i]?.team1, teams?.team1) * 100
+    );
+    const simteam2 = Math.round(
+      stringSimilarity.compareTwoStrings(betway[i]?.team2, teams?.team2) * 100
+    );
+    if (simteam1 > 60 && simteam2 > 60) {
+      matchInfo.push({ bookie: "Betway", info: betway[i] });
+      break;
+    }
+  }
+};
+
+export function fetchFromParimatch(parimatch, teams, matchInfo) {
+  for (let i = 0; i < parimatch.length; i++) {
+    const simteam1 = Math.round(
+      stringSimilarity.compareTwoStrings(parimatch[i]?.team1, teams?.team1) *
+        100
+    );
+    const simteam2 = Math.round(
+      stringSimilarity.compareTwoStrings(parimatch[i]?.team2, teams?.team2) *
+        100
+    );
+    if (simteam1 > 60 && simteam2 > 60) {
+      matchInfo.push({ bookie: "Parimatch", info: parimatch[i] });
+      break;
+    }
+  }
+};
+
+export function fetchFromBetking(betking, teams, matchInfo) {
+  for (let i = 0; i < betking.length; i++) {
+    const simteam1 = Math.round(
+      stringSimilarity.compareTwoStrings(betking[i]?.team1, teams?.team1) * 100
+    );
+    const simteam2 = Math.round(
+      stringSimilarity.compareTwoStrings(betking[i]?.team2, teams?.team2) * 100
+    );
+    if (simteam1 > 60 && simteam2 > 60) {
+      matchInfo.push({ bookie: "Betking", info: betking[i] });
+      break;
+    }
+  }
+};
+
+
+
+// Unbiased func
+
+export const calculateBiasedArbitrage = (rows, stakeVal) => {
+
+  const { highestHomeOdd, highestHomeBookie, highestAwayOdd, highestAwayBookie } = calculateHighestVals(rows);
+
+  let probHomeWin = 0;
+  let probAwayWin = 0;
+
+  if(highestHomeOdd < highestAwayOdd) {
+    probHomeWin = ((1 / highestHomeOdd).toFixed(2) * 100);
+    probAwayWin = 100 - probHomeWin;
+  } else {
+    probAwayWin = ((1 / highestAwayOdd).toFixed(2) * 100);
+    probHomeWin = 100 - probAwayWin;
+  }
+
+  let homeStake = (((probHomeWin * stakeVal) / 100).toFixed(0)) * 1;
+  let awayStake = (((probAwayWin * stakeVal) / 100).toFixed(0)) * 1;
+
+  const { homeWin, awayWin} = calculateProfit(highestHomeOdd, highestAwayOdd, homeStake, awayStake);
+
+  let response = {
+    homeStake: parseInt(homeStake.toFixed(0)).toLocaleString("en-US"),
+    homeWin: parseInt(homeWin.toFixed(0)).toLocaleString("en-US"),
+    homeBookie: highestHomeBookie,
+    homeOdd: highestHomeOdd,
+    awayStake: parseInt(awayStake.toFixed(0)).toLocaleString("en-US"),
+    awayWin: parseInt(awayWin.toFixed(0)).toLocaleString("en-US"),
+    awayBookie: highestAwayBookie,
+    awayOdd: highestAwayOdd
+  }
+
+  return response;
+};
+
+// end of biased func
+
+
+// Unbiased func
+
+let totalUnbiasedHomeStake = 0;
+let totalUnbiasedAwayStake = 0;
+
+export const calculateUnbiasedArbitrage = (rows, stakeVal) => {
+  totalUnbiasedHomeStake = 0; // reset their values.
+  totalUnbiasedAwayStake = 0; // reset their values.
+
+  const { highestHomeOdd, highestHomeBookie, highestAwayOdd, highestAwayBookie } = calculateHighestVals(rows);
+
+
+  let probHomeWin = ((1 / highestHomeOdd).toFixed(2) * 100);
+  let probAwayWin = ((1 / highestAwayOdd).toFixed(2) * 100);
+
+  if(probHomeWin + probAwayWin >= 100) return; // stop calculating if its not suitable for arbitrage betting.
+
+  unbiasedCalc(probHomeWin, probAwayWin, stakeVal);
+  const { homeWin, awayWin} = calculateProfit(highestHomeOdd, highestAwayOdd, totalUnbiasedHomeStake, totalUnbiasedAwayStake);
+
+  let response = {
+    homeStake: parseInt(totalUnbiasedHomeStake.toFixed(0)).toLocaleString("en-US"),
+    homeWin: parseInt(homeWin.toFixed(0)).toLocaleString("en-US"),
+    homeBookie: highestHomeBookie,
+    homeOdd: highestHomeOdd,
+    awayStake: parseInt(totalUnbiasedAwayStake.toFixed(0)).toLocaleString("en-US"),
+    awayWin: parseInt(awayWin.toFixed(0)).toLocaleString("en-US"),
+    awayBookie: highestAwayBookie,
+    awayOdd: highestAwayOdd
+  }
+
+  return response;
+}
+
+
+const unbiasedCalc = (probHomeWin, probAwayWin, stakeVal) => {
+  if(stakeVal < 1) return "complete";
+
+  let homeStake = 0;
+  let awayStake = 0;
+  let remnant = 0;
+
+  homeStake = (((probHomeWin * stakeVal) / 100).toFixed(2)) * 1;
+  awayStake = (((probAwayWin * stakeVal) / 100).toFixed(2)) * 1;
+  remnant = stakeVal - (homeStake + awayStake);
+
+  totalUnbiasedHomeStake += homeStake;
+  totalUnbiasedAwayStake += awayStake;
+  return unbiasedCalc(probHomeWin, probAwayWin, remnant);
+}
+
+// end of unbiased func
+
+
+
+// general func
+
+const calculateHighestVals = (rows) => {
+  let highestHomeOdd = 0;
+  let highestHomeBookie = "";
+  let highestAwayOdd = 0;
+  let highestAwayBookie = "";
+
+  for(const row of rows) {
+    if(row.info?.homeOdd > highestHomeOdd) {
+      highestHomeOdd = row.info?.homeOdd
+      highestHomeBookie = row.bookie
+    }
+    if(row.info?.awayOdd > highestAwayOdd) {
+      highestAwayOdd = row.info?.awayOdd
+      highestAwayBookie = row.bookie
+    }
+  }
+
+  return { highestHomeOdd, highestHomeBookie, highestAwayOdd, highestAwayBookie}
+}
+
+const calculateProfit = (homeOdd, awayOdd, homeStake, awayStake) => {
+  let homeWin = (homeStake * (homeOdd - 1)) - awayStake;
+  let awayWin = (awayStake * (awayOdd - 1)) - homeStake;
+
+  return { homeWin, awayWin }
+}
