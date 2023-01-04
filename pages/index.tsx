@@ -8,17 +8,17 @@ import { fetchAllMatches } from '../axios';
 
 export default function Home() {
   const updateBookiesMatches = useBookiesStore(state => state.updateBookiesMatches);
-  let interval = 10 * 60000 // x * 1 min 
+  let interval = 10 * 60000; // x * 1 min 
     
   useEffect(() => {
     const intervalRef = setInterval(() => {
+      console.log("mounted");
       fetchAllMatches(updateBookiesMatches);
     }, interval);
 
   
     return () => {
       clearInterval(intervalRef);
-      console.log("unmounted");
     }
   }, []);
   
@@ -32,18 +32,4 @@ export default function Home() {
       </div>
     </>
   )
-}
-
-
-
-
-
-
-{/* <Image
-  src="/vercel.svg"
-  alt="Vercel Logo"
-  className={styles.vercelLogo}
-  width={100}
-  height={24}
-  priority
-/> */}
+};

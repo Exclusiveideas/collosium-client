@@ -56,6 +56,7 @@ interface IBookies {
   //     tournament?: string;
   //   }
   // ];
+  scrapingError: Array<string>;
   updateBookiesMatches: (matchesData: Array<{}>, bookie: any) => void;
 }
 
@@ -105,6 +106,7 @@ export const useBookiesStore = create<IBookies>((set) => ({
   //     awayOdd: 0,
   //   },
   // ],
+  scrapingError: [],
   updateBookiesMatches: (matchesData: Array<{}>, bookie: any) =>
     set((state) => ({ ...state, [bookie]: matchesData })),
 }));

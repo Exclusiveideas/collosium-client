@@ -44,7 +44,6 @@ const Match = () => {
 
     return () => { 
       clearInterval(intervalRef);
-      console.log("unmounted");
     }
   }, []);
 
