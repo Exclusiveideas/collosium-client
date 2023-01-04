@@ -11,9 +11,6 @@ import { useRouter } from 'next/navigation';
 import { useBookiesStore } from '../store';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-import { TablePagination } from '@mui/material';
-import { fetchFromBetking, fetchFromBetnaija, fetchFromBetway, fetchFromOnexbet, fetchFromParimatch } from '../utils'
-
 
 interface matchName {
     match: string
@@ -56,13 +53,12 @@ export const HomeTable = () => {
     }
 
 
-    return (
-        <Paper >
+    return ( 
+        <Paper>
             <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: 300, maxWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="left">Order</TableCell>
                             <TableCell align="center">Match</TableCell>
                         </TableRow>
                     </TableHead>
@@ -78,8 +74,7 @@ export const HomeTable = () => {
                                     },
                                 })}
                                 className={styles.tableRow}
-                            >
-                                <TableCell align="center">{i + 1}.</TableCell>
+                            > 
                                 <TableCell align="center">{row?.match}</TableCell>
 
                             </TableRow>
@@ -99,7 +94,7 @@ export const HomeTable = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </Paper>
+            </Paper>
     )
 }
 
@@ -126,7 +121,7 @@ interface mInfo {
 
 export const BookiesTable = ({ rows }: any) => (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 300, maxWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell align="left">Bookies</TableCell>
@@ -156,8 +151,8 @@ export const BookiesTable = ({ rows }: any) => (
 
 
 export const ArbitrageTable = ({val}:any) => (
-        <TableContainer component={Paper}  >
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 300, maxWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell align="left">Bookmaker</TableCell>
@@ -199,7 +194,7 @@ export const ArbitrageTable = ({val}:any) => (
 export const LoadingTable = ({ header }: any) => (
     <Paper>
         <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 300, maxWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell align="center">{header}</TableCell>

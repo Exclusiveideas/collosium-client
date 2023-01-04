@@ -8,17 +8,26 @@ import { fetchAllMatches } from '../axios';
 
 export default function Home() {
   const updateBookiesMatches = useBookiesStore(state => state.updateBookiesMatches);
-
+  let interval = 10 * 60000 // x * 1 min 
+    
   useEffect(() => {
-    fetchAllMatches(updateBookiesMatches);
-  }, [])
+    const intervalRef = setInterval(() => {
+      fetchAllMatches(updateBookiesMatches);
+    }, interval);
+
+  
+    return () => {
+      clearInterval(intervalRef);
+      console.log("unmounted");
+    }
+  }, []);
   
 
   return (
     <>
       <HeadComponent />
       <div className={styles.page}>
-        <h2 className={styles.matchesTitle}>Collosiium</h2>
+        <h2 className={styles.matchesTitle}>Collosium</h2>
         <HomeTable />
       </div>
     </>

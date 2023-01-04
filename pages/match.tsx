@@ -7,7 +7,7 @@ import { Paid } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { useBookiesStore } from '../store';
 import { fetchAllMatches } from '../axios';
-import { calculateBiasedArbitrage, calculateUnbiasedArbitrage, fetchFromBetking, fetchFromBetnaija, fetchFromBetway, fetchFromOnexbet, fetchFromParimatch } from '../utils';
+import { calculateBiasedArbitrage, calculateUnbiasedArbitrage, fetchFromBetking, fetchFromBetway, fetchFromOnexbet, fetchFromParimatch } from '../utils';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -25,18 +25,28 @@ const Match = () => {
   let matchInfo: any = [];
 
 
-  const { onexbet, betway, betking, parimatch, betnaija, updateBookiesMatches } = useBookiesStore((state) => ({
+  const { onexbet, betway, betking, parimatch, updateBookiesMatches } = useBookiesStore((state) => ({
     onexbet: state.onexbet,
     betway: state.betway,
     betking: state.betking,
     parimatch: state.parimatch,
-    betnaija: state.betnaija,
     updateBookiesMatches: state.updateBookiesMatches
 }));
 
+
+  let interval = 10 * 60000 // x * 1 min 
+
   useEffect(() => {
-    if(onexbet.length < 2) fetchAllMatches(updateBookiesMatches);
-  }, [])
+    const intervalRef = setInterval(() => {
+      fetchAllMatches(updateBookiesMatches);
+    }, interval);
+
+
+    return () => { 
+      clearInterval(intervalRef);
+      console.log("unmounted");
+    }
+  }, []);
 
 
   useEffect(() => {
@@ -50,14 +60,13 @@ const Match = () => {
   }, [router.query]);
 
   useEffect(() => {
-    if ( teams.team1 && matchInfo.length == 0 && onexbet.length > 1 && betnaija.length > 1 && betway.length > 1 && betking.length > 1 && parimatch.length > 1) {
+    if ( teams.team1 && matchInfo.length == 0 && onexbet.length > 1 && betway.length > 1 && betking.length > 1 && parimatch.length > 1) {
         fetchFromOnexbet(onexbet, teams, matchInfo);
-        fetchFromBetnaija(betnaija, teams, matchInfo);
         fetchFromBetway(betway, teams, matchInfo);
         fetchFromParimatch(parimatch, teams, matchInfo);
         fetchFromBetking(betking, teams, matchInfo);
     }
-}, [teams, onexbet, betnaija, betway, betking, parimatch]);
+}, [teams, onexbet, betway, betking, parimatch]);
 
 
 

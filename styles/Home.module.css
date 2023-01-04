@@ -38,7 +38,7 @@
   flex-direction: column;
 }
 
-.text_error{
+.text_error {
   color: red;
   size: 13px;
   width: 100%;
@@ -95,4 +95,14 @@
 
 .stakeBtn:hover {
   background-color: teal;
+}
+
+@media screen and (max-width: 768px) {
+  .matchesTitle {
+    font-size: 30px;
+  }
+
+  .subTitle {
+    font-size: 20px;
+  }
 }
