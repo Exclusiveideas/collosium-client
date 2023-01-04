@@ -45,7 +45,7 @@ const Match = () => {
     return () => { 
       clearInterval(intervalRef);
     }
-  }, []);
+  }, [interval, updateBookiesMatches]);
 
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,7 +14,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 interface matchName {
     match: string
-}
+};
 
 export const HomeTable = () => {
     const router: any = useRouter();
@@ -26,12 +26,12 @@ export const HomeTable = () => {
         onexbet: state.onexbet,
     }));
 
-    const extractOnexbet = () => {
+    const extractOnexbet =  useCallback(() => {
         for (let i = 0; i < onexbet.length; i++) {
             const match = `${onexbet[i]?.team1 || 'unknown'} vs ${onexbet[i]?.team2 || 'unknown'}`;
             matchesName.push(match);
         }
-    }
+    }, [])
 
 
     useEffect(() => {
