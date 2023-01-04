@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { ArbitrageTable, BookiesTable, LoadingTable } from '../components/table';
 import styles from '../styles/Home.module.css';
 import Box from '@mui/material/Box';
@@ -22,7 +22,7 @@ const Match = () => {
   const [unbiasedResponse, setUnbiasedResponse] = useState<any>({});
   const [biasedResponse, setBiasedResponse] = useState<any>({});
 
-  let matchInfo: any = [];
+  let matchInfo: any = useMemo(() => [], []);
 
 
   const { onexbet, betway, betking, parimatch, updateBookiesMatches } = useBookiesStore((state) => ({
@@ -65,7 +65,7 @@ const Match = () => {
         fetchFromParimatch(parimatch, teams, matchInfo);
         fetchFromBetking(betking, teams, matchInfo);
     }
-}, [teams, onexbet, betway, betking, parimatch]);
+}, [teams, onexbet, betway, betking, parimatch, matchInfo]);
 
 
 

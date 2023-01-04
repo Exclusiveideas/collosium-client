@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,18 +19,24 @@ interface matchName {
 export const HomeTable = () => {
     const router: any = useRouter();
 
-    let matchesName: any = [];
+    let matchesName: any = useMemo(() => [], []);
     const [rows, setRows] = useState<any>([]);
 
     const { onexbet } = useBookiesStore((state) => ({
         onexbet: state.onexbet,
     }));
 
+    const extractOnexbet = () => {
+        for (let i = 0; i < onexbet.length; i++) {
+            const match = `${onexbet[i]?.team1 || 'unknown'} vs ${onexbet[i]?.team2 || 'unknown'}`;
+            matchesName.push(match);
+        }
+    }
 
 
     useEffect(() => {
         if (onexbet[0].team1) extractOnexbet()
-    }, [onexbet]);
+    }, [onexbet, extractOnexbet]);
 
     useEffect(() => {
         if (matchesName[0]) {
@@ -45,12 +51,6 @@ export const HomeTable = () => {
         }
     }, [matchesName])
 
-    const extractOnexbet = () => {
-        for (let i = 0; i < onexbet.length; i++) {
-            const match = `${onexbet[i]?.team1 || 'unknown'} vs ${onexbet[i]?.team2 || 'unknown'}`;
-            matchesName.push(match);
-        }
-    }
 
 
     return ( 

@@ -12,7 +12,6 @@ export default function Home() {
     
   useEffect(() => {
     const intervalRef = setInterval(() => {
-      console.log("mounted");
       fetchAllMatches(updateBookiesMatches);
     }, interval);
 
@@ -20,7 +19,7 @@ export default function Home() {
     return () => {
       clearInterval(intervalRef);
     }
-  }, []);
+  }, [interval, updateBookiesMatches]);
   
 
   return (
