@@ -20,7 +20,7 @@ export default function Home() {
     //   clearInterval(intervalRef);
     //   alert("unmounted");
     // }
-  }, [ updateBookiesMatches]);
+  }, []);
   
 
   return (

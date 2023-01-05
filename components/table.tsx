@@ -31,12 +31,12 @@ export const HomeTable = () => {
             const match = `${onexbet[i]?.team1 || 'unknown'} vs ${onexbet[i]?.team2 || 'unknown'}`;
             matchesName.push(match);
         }
-    }, [])
+    }, [onexbet])
 
 
     useEffect(() => {
         if (onexbet[0].team1) extractOnexbet()
-    }, [onexbet, extractOnexbet]);
+    }, [onexbet]);
 
     useEffect(() => {
         if (matchesName[0]) {
