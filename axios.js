@@ -33,7 +33,6 @@ const fetchBetNaija = async (updateBookiesMatches) => {
 const fetchParimatch = async (updateBookiesMatches) => {
   try {
     const res = await axiosInstance.get("/parimatch");
-    console.log("res: ", res);
     res?.data?.Matches && updateBookiesMatches(res?.data?.Matches, "parimatch");
   } catch (err) {
     console.log("error fetching from parimatch: ", err);
