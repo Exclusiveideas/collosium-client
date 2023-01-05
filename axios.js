@@ -10,13 +10,11 @@ export const fetchAllMatches = (updateBookiesMatches) => {
   fetchBetking(updateBookiesMatches);
   fetchBetway(updateBookiesMatches);
   fetchParimatch(updateBookiesMatches);
-  // fetchBetNaija(updateBookiesMatches);
 };
 
 const fetchOnexbet = async (updateBookiesMatches) => {
   try {
     const res = await axiosInstance.get("/onexbet");
-    console.log("onex: ", res);
     updateBookiesMatches(res?.data?.Matches, "onexbet");
   } catch (err) {
     console.log("error fetching from 1xbet: ", err);

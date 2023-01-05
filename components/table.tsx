@@ -19,7 +19,7 @@ interface matchName {
 export const HomeTable = () => {
     const router: any = useRouter();
 
-    let matchesName: any = useMemo(() => [], []);
+    let matchesName: any = [];
     const [rows, setRows] = useState<any>([]);
 
     const { onexbet } = useBookiesStore((state) => ({

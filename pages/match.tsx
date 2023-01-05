@@ -22,7 +22,7 @@ const Match = () => {
   const [unbiasedResponse, setUnbiasedResponse] = useState<any>({});
   const [biasedResponse, setBiasedResponse] = useState<any>({});
 
-  let matchInfo: any = useMemo(() => [], []);
+  let matchInfo: any = [];
 
 
   const { onexbet, betway, betking, parimatch, updateBookiesMatches } = useBookiesStore((state) => ({
@@ -34,7 +34,7 @@ const Match = () => {
 }));
 
 
-  let interval = 10 * 60000 // x * 1 min 
+  let interval = 10 * 60000; // x * 1 min 
 
   useEffect(() => {
     const intervalRef = setInterval(() => {
