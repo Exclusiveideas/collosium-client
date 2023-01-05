@@ -48,20 +48,37 @@ const Match = () => {
   }, [router.query]);
 
   useEffect(() => {
-    let matchesNames = [];
+    let matchesNames:any = [];
 
-    if (teams.team1 && rows.length == 0 && onexbet.length > 1 && betway.length > 1 && betking.length > 1 && parimatch.length > 1) {
-        matchesNames.push(...fetchFromOnexbet(onexbet, teams));
-        matchesNames.push(...fetchFromBetway(betway, teams));
-        matchesNames.push(...fetchFromParimatch(parimatch, teams));
-        matchesNames.push(...fetchFromBetking(betking, teams));
-    }
+    if(!teams.team1) return;
+    if(onexbet.length > 1) onexbetMatchNames(matchesNames);
+    if(betway.length > 1) betwayMatchNames(matchesNames);
+    if(betking.length > 1) betkingMatchNames(matchesNames);
+    if(parimatch.length > 1) pariMatchNames(matchesNames);
 
     matchesNames[0]?.bookie && setRows([...matchesNames]);
 }, [teams, onexbet, betway, betking, parimatch]);
 
-console.log(rows);
+  const onexbetMatchNames = (matchesNames:any) => {
+        matchesNames.push(...fetchFromOnexbet(onexbet, teams));
 
+  }
+
+  const betwayMatchNames = (matchesNames:any) => {
+        matchesNames.push(...fetchFromBetway(betway, teams));
+
+  }
+
+  const betkingMatchNames = (matchesNames:any) => {
+        matchesNames.push(...fetchFromParimatch(parimatch, teams));
+
+  }
+
+  const pariMatchNames = (matchesNames:any) => {
+        matchesNames.push(...fetchFromBetking(betking, teams));
+
+  }
+ 
 
   const updateStake = (val: any) => {
     if(textError) setTextError(false);

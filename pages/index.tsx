@@ -10,7 +10,7 @@ export default function Home() {
   const updateBookiesMatches = useBookiesStore(state => state.updateBookiesMatches);
     
   useEffect(() => {
-      fetchAllMatches(updateBookiesMatches);
+    fetchAllMatches(updateBookiesMatches);
   }, []);
   
 

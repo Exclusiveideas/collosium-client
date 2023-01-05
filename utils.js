@@ -88,7 +88,7 @@ export function fetchFromBetking(betking, teams) {
     const simteam2 = Math.round(
       stringSimilarity.compareTwoStrings(betking[i]?.team2, teams?.team2) * 100
     );
-    if (simteam1 > 60 && simteam2 > 60) {
+    if (simteam1 > 50 && simteam2 > 50) {
       matchName.push({ bookie: "Betking", info: betking[i] });
       break;
     }

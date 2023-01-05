@@ -15,7 +15,7 @@ export const fetchAllMatches = (updateBookiesMatches) => {
 const fetchOnexbet = async (updateBookiesMatches) => {
   try {
     const res = await axiosInstance.get("/onexbet");
-    updateBookiesMatches(res?.data?.Matches, "onexbet");
+    res?.data?.Matches && updateBookiesMatches(res?.data?.Matches, "onexbet");
   } catch (err) {
     console.log("error fetching from 1xbet: ", err);
   }
@@ -24,7 +24,7 @@ const fetchOnexbet = async (updateBookiesMatches) => {
 const fetchBetNaija = async (updateBookiesMatches) => {
   try {
     const res = await axiosInstance.get("/betnaija");
-    updateBookiesMatches(res?.data?.Matches, "betnaija");
+    res?.data?.Matches && updateBookiesMatches(res?.data?.Matches, "betnaija");
   } catch (err) {
     console.log("error fetching from betnaija: ", err);
   }
@@ -33,7 +33,8 @@ const fetchBetNaija = async (updateBookiesMatches) => {
 const fetchParimatch = async (updateBookiesMatches) => {
   try {
     const res = await axiosInstance.get("/parimatch");
-    updateBookiesMatches(res?.data?.Matches, "parimatch");
+    console.log("res: ", res);
+    res?.data?.Matches && updateBookiesMatches(res?.data?.Matches, "parimatch");
   } catch (err) {
     console.log("error fetching from parimatch: ", err);
   }
@@ -42,7 +43,7 @@ const fetchParimatch = async (updateBookiesMatches) => {
 const fetchBetking = async (updateBookiesMatches) => {
   try {
     const res = await axiosInstance.get("/betking");
-    updateBookiesMatches(res?.data?.Matches, "betking");
+    res?.data?.Matches && updateBookiesMatches(res?.data?.Matches, "betking");
   } catch (err) {
     console.log("error fetching from betking: ", err);
   }
@@ -51,7 +52,7 @@ const fetchBetking = async (updateBookiesMatches) => {
 const fetchBetway = async (updateBookiesMatches) => {
   try {
     const res = await axiosInstance.get("/betway");
-    updateBookiesMatches(res?.data?.Matches, "betway");
+    res?.data?.Matches && updateBookiesMatches(res?.data?.Matches, "betway");
   } catch (err) {
     console.log("error fetching from betway: ", err);
   }
