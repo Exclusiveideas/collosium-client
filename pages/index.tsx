@@ -8,17 +8,9 @@ import { fetchAllMatches } from '../axios';
 
 export default function Home() {
   const updateBookiesMatches = useBookiesStore(state => state.updateBookiesMatches);
-  let interval = 10 * 60000; // x * 1 min 
     
   useEffect(() => {
-    const intervalRef = setInterval(() => {
       fetchAllMatches(updateBookiesMatches);
-    }, interval);
-
-  
-    return () => {
-      clearInterval(intervalRef);
-    }
   }, []);
   
 

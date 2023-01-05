@@ -1,7 +1,9 @@
 var stringSimilarity = require("string-similarity")
 
 
-export function fetchFromOnexbet(onexbet, teams, matchInfo) {
+export function fetchFromOnexbet(onexbet, teams) {
+  let matchName = [];
+  
   for (let i = 0; i < onexbet.length; i++) {
     const simteam1 = Math.round(
       stringSimilarity.compareTwoStrings(onexbet[i]?.team1, teams?.team1) * 100
@@ -10,13 +12,17 @@ export function fetchFromOnexbet(onexbet, teams, matchInfo) {
       stringSimilarity.compareTwoStrings(onexbet[i]?.team2, teams?.team2) * 100
     );
     if (simteam1 > 60 && simteam2 > 60) {
-      matchInfo.push({ bookie: "1xbet", info: onexbet[i] });
+      matchName.push({ bookie: "1xbet", info: onexbet[i] });
       break;
     }
   }
+
+  return matchName;
 };
 
-export function fetchFromBetnaija(betnaija, teams, matchInfo) {
+export function fetchFromBetnaija(betnaija, teams) {
+  let matchName = [];
+
   for (let i = 0; i < betnaija.length; i++) {
     const simteam1 = Math.round(
       stringSimilarity.compareTwoStrings(betnaija[i]?.team1, teams?.team1) * 100
@@ -25,13 +31,16 @@ export function fetchFromBetnaija(betnaija, teams, matchInfo) {
       stringSimilarity.compareTwoStrings(betnaija[i]?.team2, teams?.team2) * 100
     );
     if (simteam1 > 60 && simteam2 > 60) {
-      matchInfo.push({ bookie: "Betnaija", info: betnaija[i] });
+      matchName.push({ bookie: "Betnaija", info: betnaija[i] });
       break;
     }
   }
+  return matchName;
 };
 
-export function fetchFromBetway(betway, teams, matchInfo) {
+export function fetchFromBetway(betway, teams) {
+  let matchName = [];
+
   for (let i = 0; i < betway.length; i++) {
     const simteam1 = Math.round(
       stringSimilarity.compareTwoStrings(betway[i]?.team1, teams?.team1) * 100
@@ -40,13 +49,17 @@ export function fetchFromBetway(betway, teams, matchInfo) {
       stringSimilarity.compareTwoStrings(betway[i]?.team2, teams?.team2) * 100
     );
     if (simteam1 > 60 && simteam2 > 60) {
-      matchInfo.push({ bookie: "Betway", info: betway[i] });
+      matchName.push({ bookie: "Betway", info: betway[i] });
       break;
     }
   }
+
+  return matchName;
 };
 
-export function fetchFromParimatch(parimatch, teams, matchInfo) {
+export function fetchFromParimatch(parimatch, teams) {
+  let matchName = [];
+
   for (let i = 0; i < parimatch.length; i++) {
     const simteam1 = Math.round(
       stringSimilarity.compareTwoStrings(parimatch[i]?.team1, teams?.team1) *
@@ -57,13 +70,17 @@ export function fetchFromParimatch(parimatch, teams, matchInfo) {
         100
     );
     if (simteam1 > 60 && simteam2 > 60) {
-      matchInfo.push({ bookie: "Parimatch", info: parimatch[i] });
+      matchName.push({ bookie: "Parimatch", info: parimatch[i] });
       break;
     }
   }
+
+  return matchName;
 };
 
-export function fetchFromBetking(betking, teams, matchInfo) {
+export function fetchFromBetking(betking, teams) {
+  let matchName = [];
+
   for (let i = 0; i < betking.length; i++) {
     const simteam1 = Math.round(
       stringSimilarity.compareTwoStrings(betking[i]?.team1, teams?.team1) * 100
@@ -72,10 +89,12 @@ export function fetchFromBetking(betking, teams, matchInfo) {
       stringSimilarity.compareTwoStrings(betking[i]?.team2, teams?.team2) * 100
     );
     if (simteam1 > 60 && simteam2 > 60) {
-      matchInfo.push({ bookie: "Betking", info: betking[i] });
+      matchName.push({ bookie: "Betking", info: betking[i] });
       break;
     }
   }
+
+  return matchName;
 };
 
 

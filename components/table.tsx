@@ -19,7 +19,6 @@ interface matchName {
 export const HomeTable = () => {
     const router: any = useRouter();
 
-    let matchesName: any = [];
     const [rows, setRows] = useState<any>([]);
 
     const { onexbet } = useBookiesStore((state) => ({
@@ -27,29 +26,19 @@ export const HomeTable = () => {
     }));
 
     const extractOnexbet =  useCallback(() => {
+        let matchesName: any = [];
+
         for (let i = 0; i < onexbet.length; i++) {
             const match = `${onexbet[i]?.team1 || 'unknown'} vs ${onexbet[i]?.team2 || 'unknown'}`;
-            matchesName.push(match);
-        }
-    }, [onexbet])
+            matchesName.push({match});
+        };
+        matchesName[0]?.match && setRows([...matchesName])
+    }, [onexbet]);
 
 
     useEffect(() => {
         if (onexbet[0].team1) extractOnexbet()
     }, [onexbet]);
-
-    useEffect(() => {
-        if (matchesName[0]) {
-            let tableNames = [];
-
-            for (let i = 0; i < matchesName.length; i++) {
-                tableNames.push({ match: matchesName[i] });
-            }
-
-            setRows([...tableNames])
-
-        }
-    }, [matchesName])
 
 
 

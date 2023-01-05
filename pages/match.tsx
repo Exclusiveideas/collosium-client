@@ -22,8 +22,6 @@ const Match = () => {
   const [unbiasedResponse, setUnbiasedResponse] = useState<any>({});
   const [biasedResponse, setBiasedResponse] = useState<any>({});
 
-  let matchInfo: any = [];
-
 
   const { onexbet, betway, betking, parimatch, updateBookiesMatches } = useBookiesStore((state) => ({
     onexbet: state.onexbet,
@@ -34,18 +32,9 @@ const Match = () => {
 }));
 
 
-  let interval = 10 * 60000; // x * 1 min 
-
   useEffect(() => {
-    const intervalRef = setInterval(() => {
-      fetchAllMatches(updateBookiesMatches);
-    }, interval);
-
-
-    return () => { 
-      clearInterval(intervalRef);
-    }
-  }, [interval, updateBookiesMatches]);
+    onexbet.length < 2 && fetchAllMatches(updateBookiesMatches);
+  }, []);
 
 
   useEffect(() => {
@@ -59,20 +48,20 @@ const Match = () => {
   }, [router.query]);
 
   useEffect(() => {
-    if ( teams.team1 && matchInfo.length == 0 && onexbet.length > 1 && betway.length > 1 && betking.length > 1 && parimatch.length > 1) {
-        fetchFromOnexbet(onexbet, teams, matchInfo);
-        fetchFromBetway(betway, teams, matchInfo);
-        fetchFromParimatch(parimatch, teams, matchInfo);
-        fetchFromBetking(betking, teams, matchInfo);
+    let matchesNames = [];
+
+    if (teams.team1 && rows.length == 0 && onexbet.length > 1 && betway.length > 1 && betking.length > 1 && parimatch.length > 1) {
+        matchesNames.push(...fetchFromOnexbet(onexbet, teams));
+        matchesNames.push(...fetchFromBetway(betway, teams));
+        matchesNames.push(...fetchFromParimatch(parimatch, teams));
+        matchesNames.push(...fetchFromBetking(betking, teams));
     }
-}, [teams, onexbet, betway, betking, parimatch, matchInfo]);
 
+    matchesNames[0]?.bookie && setRows([...matchesNames]);
+}, [teams, onexbet, betway, betking, parimatch]);
 
+console.log(rows);
 
-
-  useEffect(() => {
-    if(matchInfo.length > 0) setRows(matchInfo);
-  }, [matchInfo]);
 
   const updateStake = (val: any) => {
     if(textError) setTextError(false);
@@ -110,7 +99,7 @@ const Match = () => {
       <h2 className={styles.matchesTitle}>{teams?.team1} - {teams?.team2}</h2>
       {rows.length > 0 &&
         <BookiesTable rows={rows} />}
-      {rows.length < 1 && <LoadingTable header="Odds" />}
+      {rows?.length < 1 && <LoadingTable header="Odds" />}
       <div className={styles.stakeWrapper}>
         <Paid className={styles.stakeIcon} />
         <Box
