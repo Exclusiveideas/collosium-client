@@ -11,7 +11,7 @@ export function fetchFromOnexbet(onexbet, teams) {
     const simteam2 = Math.round(
       stringSimilarity.compareTwoStrings(onexbet[i]?.team2, teams?.team2) * 100
     );
-    if (simteam1 > 45 && simteam2 > 45) {
+    if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "1xbet", info: onexbet[i] });
       break;
     }
@@ -30,7 +30,7 @@ export function fetchFromBetnaija(betnaija, teams) {
     const simteam2 = Math.round(
       stringSimilarity.compareTwoStrings(betnaija[i]?.team2, teams?.team2) * 100
     );
-    if (simteam1 > 45 && simteam2 > 45) {
+    if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "Betnaija", info: betnaija[i] });
       break;
     }
@@ -48,7 +48,7 @@ export function fetchFromBetway(betway, teams) {
     const simteam2 = Math.round(
       stringSimilarity.compareTwoStrings(betway[i]?.team2, teams?.team2) * 100
     );
-    if (simteam1 > 45 && simteam2 > 45) {
+    if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "Betway", info: betway[i] });
       break;
     }
@@ -69,7 +69,7 @@ export function fetchFromParimatch(parimatch, teams) {
       stringSimilarity.compareTwoStrings(parimatch[i]?.team2, teams?.team2) *
         100
     );
-    if (simteam1 > 45 && simteam2 > 45) {
+    if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "Parimatch", info: parimatch[i] });
       break;
     }
@@ -89,7 +89,7 @@ export function fetchFromBetking(betking, teams) {
       stringSimilarity.compareTwoStrings(betking[i]?.team2, teams?.team2) * 100
     );
     
-    if (simteam1 > 45 && simteam2 > 45) {
+    if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "Betking", info: betking[i] });
       break;
     }
@@ -214,8 +214,10 @@ const calculateHighestVals = (rows) => {
   }
 
   if(highestHomeBookie == highestAwayBookie) {
-    console.log("same side bookie");
+    
     if(highestHomeOdd > highestAwayOdd) {
+      highestAwayOdd = 0;
+
       for(const row of rows) {
         if(row.info?.awayOdd > highestAwayOdd && row.bookie != highestAwayBookie) {
           highestAwayOdd = row.info?.awayOdd
@@ -224,6 +226,8 @@ const calculateHighestVals = (rows) => {
       }
     }
     else {
+      highestHomeOdd = 0;
+
       for(const row of rows) {
         if(row.info?.homeOdd > highestHomeOdd && row.bookie != highestHomeBookie) {
           highestHomeOdd = row.info?.homeOdd
