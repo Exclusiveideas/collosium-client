@@ -1,4 +1,4 @@
-var stringSimilarity = require("string-similarity")
+// var stringSimilarity = require("string-similarity");
 
 
 export function fetchFromOnexbet(onexbet, teams) {
@@ -6,10 +6,10 @@ export function fetchFromOnexbet(onexbet, teams) {
   
   for (let i = 0; i < onexbet.length; i++) {
     const simteam1 = Math.round(
-      stringSimilarity.compareTwoStrings(onexbet[i]?.team1, teams?.team1) * 100
+      similarity(onexbet[i]?.team1, teams?.team1) * 100
     );
     const simteam2 = Math.round(
-      stringSimilarity.compareTwoStrings(onexbet[i]?.team2, teams?.team2) * 100
+      similarity(onexbet[i]?.team2, teams?.team2) * 100
     );
     if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "1xbet", info: onexbet[i] });
@@ -25,10 +25,10 @@ export function fetchFromBetnaija(betnaija, teams) {
 
   for (let i = 0; i < betnaija.length; i++) {
     const simteam1 = Math.round(
-      stringSimilarity.compareTwoStrings(betnaija[i]?.team1, teams?.team1) * 100
+      similarity(betnaija[i]?.team1, teams?.team1) * 100
     );
     const simteam2 = Math.round(
-      stringSimilarity.compareTwoStrings(betnaija[i]?.team2, teams?.team2) * 100
+      similarity(betnaija[i]?.team2, teams?.team2) * 100
     );
     if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "Betnaija", info: betnaija[i] });
@@ -43,10 +43,10 @@ export function fetchFromBetway(betway, teams) {
 
   for (let i = 0; i < betway.length; i++) {
     const simteam1 = Math.round(
-      stringSimilarity.compareTwoStrings(betway[i]?.team1, teams?.team1) * 100
+      similarity(betway[i]?.team1, teams?.team1) * 100
     );
     const simteam2 = Math.round(
-      stringSimilarity.compareTwoStrings(betway[i]?.team2, teams?.team2) * 100
+      similarity(betway[i]?.team2, teams?.team2) * 100
     );
     if (simteam1 > 40 && simteam2 > 40) {
       matchName.push({ bookie: "Betway", info: betway[i] });
@@ -62,11 +62,11 @@ export function fetchFromParimatch(parimatch, teams) {
 
   for (let i = 0; i < parimatch.length; i++) {
     const simteam1 = Math.round(
-      stringSimilarity.compareTwoStrings(parimatch[i]?.team1, teams?.team1) *
+      similarity(parimatch[i]?.team1, teams?.team1) *
         100
     );
     const simteam2 = Math.round(
-      stringSimilarity.compareTwoStrings(parimatch[i]?.team2, teams?.team2) *
+      similarity(parimatch[i]?.team2, teams?.team2) *
         100
     );
     if (simteam1 > 40 && simteam2 > 40) {
@@ -83,10 +83,10 @@ export function fetchFromBetking(betking, teams) {
 
   for (let i = 0; i < betking.length; i++) {
     const simteam1 = Math.round(
-      stringSimilarity.compareTwoStrings(betking[i]?.team1, teams?.team1) * 100
+      similarity(betking[i]?.team1, teams?.team1) * 100
     );
     const simteam2 = Math.round(
-      stringSimilarity.compareTwoStrings(betking[i]?.team2, teams?.team2) * 100
+      similarity(betking[i]?.team2, teams?.team2) * 100
     );
     
     if (simteam1 > 40 && simteam2 > 40) {
@@ -246,3 +246,47 @@ const calculateProfit = (homeOdd, awayOdd, homeStake, awayStake) => {
 
   return { homeWin, awayWin }
 }
+
+
+// calculate string simialrity
+
+function similarity(s1, s2) {
+  var longer = s1;
+  var shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  var longerLength = longer.length;
+  if (longerLength == 0) {
+    return 1.0;
+  }
+  return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
+function editDistance(s1, s2) {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+
+  var costs = new Array();
+  for (var i = 0; i <= s1.length; i++) {
+    var lastValue = i;
+    for (var j = 0; j <= s2.length; j++) {
+      if (i == 0)
+        costs[j] = j;
+      else {
+        if (j > 0) {
+          var newValue = costs[j - 1];
+          if (s1.charAt(i - 1) != s2.charAt(j - 1))
+            newValue = Math.min(Math.min(newValue, lastValue),
+              costs[j]) + 1;
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0)
+      costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+};
