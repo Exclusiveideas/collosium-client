@@ -1,16 +1,28 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import { ArbitrageTable, BookiesTable, LoadingTable } from '../components/table';
+import React, { useEffect, useState } from 'react'
+import { ArbitrageTable, BookiesTable } from '../components/table';
 import styles from '../styles/Home.module.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Paid } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { useBookiesStore } from '../store';
-import { fetchAllMatches } from '../axios';
-import { calculateBiasedArbitrage, calculateUnbiasedArbitrage, fetchFromBetking, fetchFromBetway, fetchFromOnexbet, fetchFromParimatch } from '../utils';
+import { fetchAllMatches, fetchBetking } from '../axios';
+import { calculateBiasedArbitrage, calculateUnbiasedArbitrage, fetchFromBookie } from '../utils';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
+
+let bookiesResponded: any = 0;
+
+let matchesNames: any = [];
+
+let fetchCheck: any = {
+  onexbet: false,
+  parimatch: false,
+  betway: false,
+  betking: false,
+  sportybet: false,
+};
 
 const Match = () => {
   const router: any = useRouter();
@@ -23,65 +35,90 @@ const Match = () => {
   const [biasedResponse, setBiasedResponse] = useState<any>({});
 
 
-  const { onexbet, betway, betking, parimatch, updateBookiesMatches } = useBookiesStore((state) => ({
+  const { onexbet, betway, parimatch, sportybet, updateBookiesMatches } = useBookiesStore((state) => ({
     onexbet: state.onexbet,
     betway: state.betway,
-    betking: state.betking,
     parimatch: state.parimatch,
+    sportybet: state.sportybet,
     updateBookiesMatches: state.updateBookiesMatches
-}));
+  }));
 
 
   useEffect(() => {
-    onexbet.length < 2 && fetchAllMatches(updateBookiesMatches);
+    bookiesResponded = 0;
+
+    matchesNames = [];
+
+    fetchCheck = {
+      onexbet: false,
+      parimatch: false,
+      betway: false,
+      betking: false,
+      sportybet: false,
+    };
+
+    if (onexbet.length < 2) fetchAllMatches(updateBookiesMatches);
   }, []);
 
 
   useEffect(() => {
-    if(router.query.match) {
+    if (router.query.match) {
       setTeams({
-      team1: router.query?.match?.split(" vs ")[0]?.trim(),
-      team2: router.query?.match?.split(" vs ")[1]?.trim()
-    });
-  }
+        team1: router.query?.match?.split(" vs ")[0]?.trim(),
+        team2: router.query?.match?.split(" vs ")[1]?.trim()
+      });
+    }
 
   }, [router.query]);
 
   useEffect(() => {
-    let matchesNames:any = [];
+    teams.team1 && getbetkingMatchNames();
+  }, [teams]);
 
-    if(!teams.team1) return;
-    if(onexbet.length > 1) onexbetMatchNames(matchesNames);
-    if(betway.length > 1) betwayMatchNames(matchesNames);
-    if(betking.length > 1) betkingMatchNames(matchesNames);
-    if(parimatch.length > 1) pariMatchNames(matchesNames);
+  useEffect(() => {
 
-    matchesNames[0]?.bookie && setRows([...matchesNames]);
-}, [teams, onexbet, betway, betking, parimatch]);
+    function getMatchesNames() {
+      if (!teams.team1) return;
 
-  const onexbetMatchNames = (matchesNames:any) => {
-        matchesNames.push(...fetchFromOnexbet(onexbet, teams));
+      if (onexbet.length > 1) getBookiesMatchNames("onexbet", onexbet);
+      if (betway.length > 1) getBookiesMatchNames("betway", betway);
+      if (parimatch.length > 1) getBookiesMatchNames("parimatch", parimatch);
+      if (sportybet.length > 1) getBookiesMatchNames("sportybet", sportybet);
 
+      if (matchesNames.length > 1) setRows([...matchesNames])
+    }
+
+    getMatchesNames();
+
+  }, [teams, onexbet, betway, parimatch, sportybet]);
+
+  const getBookiesMatchNames = (bookieName: any, bookie: any) => {
+    if (fetchCheck[bookieName] == true) return;
+
+    matchesNames.push(...fetchFromBookie(bookie, teams, bookieName));
+    fetchCheck[bookieName] = true;
+    bookiesResponded++;
   }
 
-  const betwayMatchNames = (matchesNames:any) => {
-        matchesNames.push(...fetchFromBetway(betway, teams));
 
+  const getbetkingMatchNames = async () => {
+    if (fetchCheck.betking == true) return;
+
+    const info = await fetchBetking(teams);
+    let kingMatch = {
+      bookie: "betking",
+      info
+    };
+
+    bookiesResponded++;
+    if (!info?.team1) return;
+
+    fetchCheck.betking = true;
+    matchesNames.push(kingMatch);
   }
-
-  const betkingMatchNames = (matchesNames:any) => {
-        matchesNames.push(...fetchFromParimatch(parimatch, teams));
-
-  }
-
-  const pariMatchNames = (matchesNames:any) => {
-        matchesNames.push(...fetchFromBetking(betking, teams));
-
-  }
- 
 
   const updateStake = (val: any) => {
-    if(textError) setTextError(false);
+    if (textError) setTextError(false);
     setStakeVal(val);
   }
 
@@ -90,13 +127,13 @@ const Match = () => {
     setUnbiasedResponse({})
     setBiasedResponse({})
 
-    for(let i = 0; i < stakeVal.length; i++) {
-      if(isNaN(stakeVal[i])) {
+    for (let i = 0; i < stakeVal.length; i++) {
+      if (isNaN(stakeVal[i])) {
         setTextError(true);
         return
       }
     }
-    
+
     setProcessingStake(true);
     calculateArbitrage();
   }
@@ -116,7 +153,11 @@ const Match = () => {
       <h2 className={styles.matchesTitle}>{teams?.team1} - {teams?.team2}</h2>
       {rows.length > 0 &&
         <BookiesTable rows={rows} />}
-      {rows?.length < 1 && <LoadingTable header="Odds" />}
+      {bookiesResponded < 5 && (
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
+      )}
       <div className={styles.stakeWrapper}>
         <Paid className={styles.stakeIcon} />
         <Box
@@ -135,13 +176,13 @@ const Match = () => {
           <CircularProgress />
         </Box>
       )}
-      { biasedResponse?.homeStake && !processingStake && (
+      {biasedResponse?.homeStake && !processingStake && (
         <div className={styles.biasedContainer}>
           <h2 className={styles.subTitle}>Biased Arbitrage</h2>
           <ArbitrageTable val={biasedResponse} />
         </div>
       )}
-      { unbiasedResponse?.homeStake && !processingStake && (
+      {unbiasedResponse?.homeStake && !processingStake && (
         <div className={styles.biasedContainer}>
           <h2 className={styles.subTitle}>Unbiased Arbitrage</h2>
           <ArbitrageTable val={unbiasedResponse} />
