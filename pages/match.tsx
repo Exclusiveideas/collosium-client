@@ -12,8 +12,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 
-let bookiesResponded: any = 0;
-
 let matchesNames: any = [];
 
 let fetchCheck: any = {
@@ -33,31 +31,36 @@ const Match = () => {
   const [processingStake, setProcessingStake] = useState<boolean>(false);
   const [unbiasedResponse, setUnbiasedResponse] = useState<any>({});
   const [biasedResponse, setBiasedResponse] = useState<any>({});
+  const [fetchedKing, setFetchedKing] = useState<any>(false);
 
 
-  const { onexbet, betway, parimatch, sportybet, updateBookiesMatches } = useBookiesStore((state) => ({
+  const { onexbet, betway, updateBookiesMatches } = useBookiesStore((state) => ({
     onexbet: state.onexbet,
     betway: state.betway,
-    parimatch: state.parimatch,
-    sportybet: state.sportybet,
     updateBookiesMatches: state.updateBookiesMatches
   }));
 
 
   useEffect(() => {
-    bookiesResponded = 0;
-
+    
     matchesNames = [];
-
     fetchCheck = {
       onexbet: false,
-      parimatch: false,
       betway: false,
       betking: false,
-      sportybet: false,
     };
 
+    const updateRowInterval = setInterval(() => {
+      setRows([...matchesNames])
+    }, 1000)
+
+    setTimeout(() => {
+      clearInterval(updateRowInterval)
+    }, 63000);
+
     if (onexbet.length < 2) fetchAllMatches(updateBookiesMatches);
+
+    return () => clearInterval(updateRowInterval);
   }, []);
 
 
@@ -82,22 +85,17 @@ const Match = () => {
 
       if (onexbet.length > 1) getBookiesMatchNames("onexbet", onexbet);
       if (betway.length > 1) getBookiesMatchNames("betway", betway);
-      if (parimatch.length > 1) getBookiesMatchNames("parimatch", parimatch);
-      if (sportybet.length > 1) getBookiesMatchNames("sportybet", sportybet);
-
-      if (matchesNames.length > 1) setRows([...matchesNames])
     }
 
     getMatchesNames();
 
-  }, [teams, onexbet, betway, parimatch, sportybet]);
+  }, [teams, onexbet, betway]);
 
   const getBookiesMatchNames = (bookieName: any, bookie: any) => {
     if (fetchCheck[bookieName] == true) return;
 
     matchesNames.push(...fetchFromBookie(bookie, teams, bookieName));
     fetchCheck[bookieName] = true;
-    bookiesResponded++;
   }
 
 
@@ -110,10 +108,10 @@ const Match = () => {
       info
     };
 
-    bookiesResponded++;
-    if (!info?.team1) return;
-
+    setFetchedKing(true);
     fetchCheck.betking = true;
+    if(!info?.team1) return;
+
     matchesNames.push(kingMatch);
   }
 
@@ -153,7 +151,7 @@ const Match = () => {
       <h2 className={styles.matchesTitle}>{teams?.team1} - {teams?.team2}</h2>
       {rows.length > 0 &&
         <BookiesTable rows={rows} />}
-      {bookiesResponded < 5 && (
+      {!fetchedKing && (
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
         </Box>

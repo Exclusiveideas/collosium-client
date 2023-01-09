@@ -109,7 +109,7 @@ interface mInfo {
 }
 
 export const BookiesTable = ({ rows }: any) => (
-        <TableContainer component={Paper} className={styles.matchPageTable}>
+        <TableContainer component={Paper}>
             <Table sx={{ minWidth: 300, maxWidth: 650 }}aria-label="simple table">
                 <TableHead>
                     <TableRow>
@@ -140,7 +140,7 @@ export const BookiesTable = ({ rows }: any) => (
 
 
 export const ArbitrageTable = ({val}:any) => (
-        <TableContainer component={Paper} className={styles.matchPageTable}>
+        <TableContainer component={Paper}>
             <Table sx={{ minWidth: 300, maxWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
