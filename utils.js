@@ -20,108 +20,6 @@ export const fetchFromBookie = (bookie, teams, bookieName) => {
 }
 
 
-// export function fetchFromOnexbet(onexbet, teams) {
-//   let matchName = [];
-  
-//   for (let i = 0; i < onexbet.length; i++) {
-//     const simteam1 = Math.round(
-//       similarity(onexbet[i]?.team1, teams?.team1) * 100
-//     );
-//     const simteam2 = Math.round(
-//       similarity(onexbet[i]?.team2, teams?.team2) * 100
-//     );
-//     if (simteam1 > 40 && simteam2 > 40) {
-//       matchName.push({ bookie: "1xbet", info: onexbet[i] });
-//       break;
-//     }
-//   }
-
-//   return matchName;
-// };
-
-// export function fetchFromBetnaija(betnaija, teams) {
-//   let matchName = [];
-
-//   for (let i = 0; i < betnaija.length; i++) {
-//     const simteam1 = Math.round(
-//       similarity(betnaija[i]?.team1, teams?.team1) * 100
-//     );
-//     const simteam2 = Math.round(
-//       similarity(betnaija[i]?.team2, teams?.team2) * 100
-//     );
-//     if (simteam1 > 40 && simteam2 > 40) {
-//       matchName.push({ bookie: "Betnaija", info: betnaija[i] });
-//       break;
-//     }
-//   }
-//   return matchName;
-// };
-
-// export function fetchFromBetway(betway, teams) {
-//   let matchName = [];
-
-//   for (let i = 0; i < betway.length; i++) {
-//     const simteam1 = Math.round(
-//       similarity(betway[i]?.team1, teams?.team1) * 100
-//     );
-//     const simteam2 = Math.round(
-//       similarity(betway[i]?.team2, teams?.team2) * 100
-//     );
-//     if (simteam1 > 40 && simteam2 > 40) {
-//       matchName.push({ bookie: "Betway", info: betway[i] });
-//       break;
-//     }
-//   }
-
-//   return matchName;
-// };
-
-// export function fetchFromParimatch(parimatch, teams) {
-//   let matchName = [];
-
-//   for (let i = 0; i < parimatch.length; i++) {
-//     const simteam1 = Math.round(
-//       similarity(parimatch[i]?.team1, teams?.team1) *
-//         100
-//     );
-//     const simteam2 = Math.round(
-//       similarity(parimatch[i]?.team2, teams?.team2) *
-//         100
-//     );
-//     if (simteam1 > 40 && simteam2 > 40) {
-//       matchName.push({ bookie: "Parimatch", info: parimatch[i] });
-//       break;
-//     }
-//   }
-
-//   return matchName;
-// };
-
-// export function fetchFromBetking(betking, teams) {
-//   let matchName = [];
-
-//   for (let i = 0; i < betking.length; i++) {
-//     const simteam1 = Math.round(
-//       similarity(betking[i]?.team1, teams?.team1) * 100
-//     );
-//     const simteam2 = Math.round(
-//       similarity(betking[i]?.team2, teams?.team2) * 100
-//     );
-    
-//     if (simteam1 > 40 && simteam2 > 40) {
-//       matchName.push({ bookie: "Betking", info: betking[i] });
-//       break;
-//     }
-//   }
-
-//   return matchName;
-// };
-
-// export const fetchFromSportyBet = () => {
-
-// }
-
-
 
 // Unbiased func
 
@@ -236,29 +134,30 @@ const calculateHighestVals = (rows) => {
     }
   }
 
-  if(highestHomeBookie == highestAwayBookie) {
+  // If highest home bookie is the same as highest away bookie
+  // if(highestHomeBookie == highestAwayBookie) {
     
-    if(highestHomeOdd > highestAwayOdd) {
-      highestAwayOdd = 0;
+  //   if(highestHomeOdd > highestAwayOdd) {
+  //     highestAwayOdd = 0;
 
-      for(const row of rows) {
-        if(row.info?.awayOdd > highestAwayOdd && row.bookie != highestAwayBookie) {
-          highestAwayOdd = row.info?.awayOdd
-          highestAwayBookie = row.bookie
-        }
-      }
-    }
-    else {
-      highestHomeOdd = 0;
+  //     for(const row of rows) {
+  //       if(row.info?.awayOdd > highestAwayOdd && row.bookie != highestAwayBookie) {
+  //         highestAwayOdd = row.info?.awayOdd
+  //         highestAwayBookie = row.bookie
+  //       }
+  //     }
+  //   }
+  //   else {
+  //     highestHomeOdd = 0;
 
-      for(const row of rows) {
-        if(row.info?.homeOdd > highestHomeOdd && row.bookie != highestHomeBookie) {
-          highestHomeOdd = row.info?.homeOdd
-          highestHomeBookie = row.bookie
-        }
-      }
-    }
-  }
+  //     for(const row of rows) {
+  //       if(row.info?.homeOdd > highestHomeOdd && row.bookie != highestHomeBookie) {
+  //         highestHomeOdd = row.info?.homeOdd
+  //         highestHomeBookie = row.bookie
+  //       }
+  //     }
+  //   }
+  // }
 
   return { highestHomeOdd, highestHomeBookie, highestAwayOdd, highestAwayBookie}
 }

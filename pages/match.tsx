@@ -34,9 +34,11 @@ const Match = () => {
   const [fetchedKing, setFetchedKing] = useState<any>(false);
 
 
-  const { onexbet, betway, updateBookiesMatches } = useBookiesStore((state) => ({
+  const { onexbet, betway, parimatch, sportybet, updateBookiesMatches } = useBookiesStore((state) => ({
     onexbet: state.onexbet,
     betway: state.betway,
+    parimatch: state.parimatch,
+    sportybet: state.sportybet,
     updateBookiesMatches: state.updateBookiesMatches
   }));
 
@@ -83,8 +85,10 @@ const Match = () => {
     function getMatchesNames() {
       if (!teams.team1) return;
 
-      if (onexbet.length > 1) getBookiesMatchNames("onexbet", onexbet);
-      if (betway.length > 1) getBookiesMatchNames("betway", betway);
+      if(onexbet.length > 1) getBookiesMatchNames("onexbet", onexbet);
+      if(betway.length > 1) getBookiesMatchNames("betway", betway);
+      // if(parimatch.length > 1) getBookiesMatchNames("parimatch", parimatch);
+      // if(sportybet.length > 1) getBookiesMatchNames("sportybet", sportybet);
     }
 
     getMatchesNames();
